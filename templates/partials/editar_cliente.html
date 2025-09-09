@@ -1,0 +1,25 @@
+<h2>Editar Cliente</h2>
+<form method="POST">{% csrf_token %}
+  <div class="form-grid">
+    <div><label>CNPJ/CPF:</label><input type="text" name="cpf_cnpj" value="{{ cliente.cpf_cnpj }}" required></div>
+    <div><label>Razão Social:</label><input type="text" name="razao_social" value="{{ cliente.razao_social }}" required></div>
+    <div><label>Tipo:</label>
+      <select name="tipo" required>
+        <option value="Física" {% if cliente.tipo == 'Física' %}selected{% endif %}>Física</option>
+        <option value="Jurídica" {% if cliente.tipo == 'Jurídica' %}selected{% endif %}>Jurídica</option>
+      </select>
+    </div>
+    <div><label>Modalidade:</label>
+      <select name="modalidade" required>
+        <option value="Contrato" {% if cliente.modalidade == 'Contrato' %}selected{% endif %}>Contrato</option>
+        <option value="Hora" {% if cliente.modalidade == 'Hora' %}selected{% endif %}>Hora</option>
+        <option value="Projeto" {% if cliente.modalidade == 'Projeto' %}selected{% endif %}>Projeto</option>
+      </select>
+    </div>
+    <div class="form-grid-full"><label>Endereço:</label><textarea name="endereco" required>{{ cliente.endereco }}</textarea></div>
+    <div><label>Valor Cobrança (R$):</label><input type="number" name="valor_cobranca" value="{{ cliente.valor_cobranca }}" required></div>
+    <div><label>Data Faturamento:</label><input type="date" name="data_faturamento" value="{{ cliente.data_faturamento|date:'Y-m-d' }}" required></div>
+    <div><label>Data Vencimento:</label><input type="date" name="data_vencimento" value="{{ cliente.data_vencimento|date:'Y-m-d' }}" required></div>
+  </div>
+  <button type="submit">Salvar Alterações</button>
+</form>

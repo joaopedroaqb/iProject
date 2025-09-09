@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Clientes</title>
+</head>
+<body>
+    <h1>Lista de Clientes</h1>
+    <table border="1">
+        <tr>
+            <th>CNPJ/CPF</th>
+            <th>Razão Social</th>
+            <th>Tipo</th>
+            <th>Endereço</th>
+            <th>Modalidade</th>
+            <th>Valor</th>
+            <th>Faturamento</th>
+            <th>Vencimento</th>
+        </tr>
+        {% for cliente in clientes %}
+        <tr>
+            <td>{{ cliente.cpf_cnpj }}</td>
+            <td>{{ cliente.razao_social }}</td>
+            <td>{{ cliente.tipo }}</td>
+            <td>{{ cliente.endereco }}</td>
+            <td>{{ cliente.modalidade }}</td>
+            <td>{{ cliente.valor_cobranca }}</td>
+            <td>{{ cliente.data_faturamento }}</td>
+            <td>{{ cliente.data_vencimento }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

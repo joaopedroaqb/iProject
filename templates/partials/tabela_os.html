@@ -1,0 +1,40 @@
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th data-editable>Executante</th>
+      <th>Cliente</th>
+      <th data-editable>Solicitante</th>
+      <th>Data Solicitação</th>
+      <th>Problema</th>
+      <th>Início</th>
+      <th>Final</th>
+      <th>Status</th>
+      <th>Faturado</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for os in ordens %}
+    <tr data-id="{{ os.id }}">
+      <td>{{ os.id }}</td>
+      <td data-editable data-field="executante">{{ os.executante }}</td>
+      <td>{{ os.cliente.razao_social }}</td>
+      <td>{{ os.solicitante }}</td>
+      <td>{{ os.data_solicitacao }}</td>
+      <td>{{ os.problema }}</td>
+      <td>{{ os.data_inicio }}</td>
+      <td>{{ os.data_final }}</td>
+      <td>{{ os.horas_consumidas }}</td>
+      <td>{{ os.total_faturar }}</td>
+      <td data-editable data-field="status">{{ os.get_status_display }}</td>
+      <td data-editable data-field="faturado">{% if os.faturado %}Sim{% else %}Não{% endif %}</td>
+      <td>
+        <button class="btn-edit">Editar</button>
+        <button class="btn-save" data-id="{{ os.id }}" style="display:none;">Salvar</button>
+      </td>
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>

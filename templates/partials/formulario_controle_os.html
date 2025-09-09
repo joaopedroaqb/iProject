@@ -1,0 +1,130 @@
+<h2>Controle OS</h2>
+<button onclick="carregarControleOS()" class="btn-refresh" style="margin-bottom: 10px;">
+  Atualizar Página
+</button>
+
+<form id="formOS" method="POST" action="/controleOS/cadastrar/">
+  {% csrf_token %}
+  <div class="form-grid">
+    <div><label>Executante:</label><input type="text" name="executante" value="Artur" required></div>
+
+    <div><label>Cliente:</label>
+      <select name="cliente_id" required>
+        <option value="">Selecione...</option>
+        {% for cliente in clientes %}
+          <option value="{{ cliente.id }}">{{ cliente.razao_social }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div><label>Solicitante:</label><input type="text" name="solicitante" required></div>
+    <div><label>Data Solicitação:</label><input type="date" name="data_solicitacao" required></div>
+    <div><label>Previsão:</label><input type="date" name="previsao" required></div>
+
+    <div class="form-grid-full">
+      <label>Problema/Motivo:</label>
+      <textarea name="problema" required></textarea>
+    </div>
+
+    <div><label>Data/Hora Início:</label><input type="datetime-local" name="data_inicio"></div>
+    <div><label>Data/Hora Final:</label><input type="datetime-local" name="data_final"></div>
+    <div><label>Horas Consumidas:</label><input type="text" name="horas_consumidas" readonly></div>
+    <div><label>Total a Faturar (R$):</label><input type="text" name="total_faturar" readonly></div>
+
+    <div><label>Status:</label>
+      <select name="status" required>
+        <option value="">Selecione...</option>
+        <option value="Não Iniciado">Não Iniciado</option>
+        <option value="Em Andamento">Em Andamento</option>
+        <option value="Concluído">Concluído</option>
+      </select>
+    </div>
+
+    <div><label>Faturado?</label>
+      <select name="faturado" required>
+        <option value="False">Não</option>
+        <option value="True">Sim</option>
+      </select>
+    </div>
+
+    <div><label>Data Faturamento:</label><input type="date" name="data_faturamento"></div>
+  </div>
+
+  <button type="submit">Salvar OS</button>
+</form>
+
+<p id="msgOS" style="margin-top:10px;"></p>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("formOS");
+  const msg = document.getElementById("msgOS");
+
+  const dataInicioInput = form.querySelector('[name="data_inicio"]');
+  const dataFinalInput = form.querySelector('[name="data_final"]');
+  const horasInput = form.querySelector('[name="horas_consumidas"]');
+  const totalInput = form.querySelector('[name="total_faturar"]');
+  const clienteSelect = form.querySelector('[name="cliente_id"]');
+
+  async function calcularHorasEValor() {
+    const inicioStr = dataInicioInput.value;
+    const fimStr = dataFinalInput.value;
+
+    if (!inicioStr || !fimStr || !clienteSelect.value) return;
+
+    const inicio = new Date(inicioStr);
+    const fim = new Date(fimStr);
+
+    if (isNaN(inicio) || isNaN(fim)) return;
+
+    const diffMs = fim - inicio;
+    const horas = parseFloat((diffMs / 1000 / 60 / 60).toFixed(2));
+
+    if (horas > 0) {
+      horasInput.value = horas;
+
+      try {
+        const res = await fetch(`/controleOS/cliente/${clienteSelect.value}/valor/`);
+        const data = await res.json();
+
+        if (data.modalidade.toLowerCase() === "hora") {
+          const valor = parseFloat(data.valor);
+          if (!isNaN(valor)) {
+            const total = (horas * valor).toFixed(2);
+            totalInput.value = total;
+          }
+        } else {
+          totalInput.value = "0.00";
+        }
+      } catch (err) {
+        console.error("Erro ao buscar cliente:", err);
+        totalInput.value = "Erro";
+      }
+    }
+  }
+
+  dataInicioInput.addEventListener("change", calcularHorasEValor);
+  dataFinalInput.addEventListener("change", calcularHorasEValor);
+  clienteSelect.addEventListener("change", calcularHorasEValor);
+
+  form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    try {
+      const res = await fetch(form.action, {
+        method: "POST",
+        headers: { "X-CSRFToken": csrfToken },
+        body: formData
+      });
+      msg.style.color = res.ok ? "green" : "red";
+      msg.textContent = res.ok ? "OS cadastrada com sucesso!" : "Erro ao cadastrar OS.";
+      if (res.ok) form.reset();
+    } catch {
+      msg.style.color = "red";
+      msg.textContent = "Erro de comunicação.";
+    }
+  });
+});
+</script>

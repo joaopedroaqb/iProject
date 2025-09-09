@@ -1,0 +1,34 @@
+<table>
+  <thead>
+    <tr>
+      <th>Razão Social</th>
+      <th>CPF/CNPJ</th>
+      <th>Tipo</th>
+      <th>Modalidade</th>
+      <th>Endereço</th>
+      <th>Valor</th>
+      <th>Faturamento</th>
+      <th>Vencimento</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for cliente in clientes %}
+    <tr>
+      <td>{{ cliente.razao_social }}</td>
+      <td>{{ cliente.cpf_cnpj }}</td>
+      <td>{{ cliente.tipo }}</td>
+      <td>{{ cliente.modalidade }}</td>
+      <td>{{ cliente.endereco }}</td>
+      <td>R$ {{ cliente.valor_cobranca }}</td>
+      <td>{{ cliente.data_faturamento|date:"d/m/Y" }}</td>
+      <td>
+        {% if cliente.vencimento_dia %}
+        Dia {{ cliente.vencimento_dia }}
+        {% else %}
+        —
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

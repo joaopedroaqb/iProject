@@ -1,0 +1,20 @@
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Usuário</th>
+      <th>Administrador</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for user in usuarios %}
+    <tr>
+      <td>{{ user.first_name }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.is_staff|yesno:"Sim,Não" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
