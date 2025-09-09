@@ -5,7 +5,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-$$lwuu9dv^caozg#7xyu#l__o^wp^w)y=3#4v6wv=1aq(rdeny'
 DEBUG = True
-ALLOWED_HOSTS = ['192.168.0.11']
+ALLOWED_HOSTS = ["iproject-1.onrender.com", "localhost", "127.0.0.1"]
+CSRF_TRUSTED_ORIGINS = ["https://iproject-1.onrender.com"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -87,3 +88,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
+
